@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Просмотр загруженных курсов валют
+{% endblock %}
+
+{% block content %}
+
+{% if state == 'ok' %}
+    <h4>Выберите даты и валюту</h4>
+    <form action="#">
+    Дата начала <input type="date" class="form-control" id="start_date" name="start_date" placeholder="Дата">
+    Дата окончания <input type="date" class="form-control" id="end_date" name="end_date" placeholder="Дата">
+        Валюта
+        <select id="valuta" name="valuta">
+            {% for item in valutes %}
+            <option value="{{ item.id }}">{{ item.name }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Показать">
+    </form>
+{% if current_valuta %}
+    <h3 class="mt-4">{{ current_valuta.name }}</h3>
+{% endif %}
+    <table id="curs_table" class="table table-striped tablesorter">
+        <thead>
+        <tr>
+            <td>Дата</td>
+            <td>Кол-во единиц</td>
+            <td>Стоимость</td>
+        </tr>
+        </thead>
+        <tbody>
+        {% for cur in curs %}
+        <tr>
+            <td>{{ cur.date }}</td>
+            <td>{{ cur.nom }}</td>
+            <td>{{ cur.curs }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <script>
+    $(document).ready(function()
+        {
+            $("#curs_table").tablesorter();
+        }
+    );
+    </script>
+{% endif %}
+
+{% if state == 'false' %}
+<div class="alert alert-danger" role="alert">{{ error }}</div>
+{% endif %}
+
+
+{% endblock %}

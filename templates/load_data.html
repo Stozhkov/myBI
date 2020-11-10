@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Загрузка данных из ЦБ РФ
+{% endblock %}
+
+{% block content %}
+
+{% if state == 'new' %}
+    <h4 class="center">Выберите диапазон дат для загрузки курсов валют из ЦБ РФ</h4>
+    <form action="#">
+    Дата начала <input type="date" class="form-control" id="start_date" name="start_date" placeholder="Дата" required>
+    Дата окончания <input type="date" class="form-control" id="end_date" name="end_date" placeholder="Дата" required>
+        <input type="submit" value="Загрузить">
+    </form>
+{% endif %}
+
+{% if state == 'ok' %}
+<div class="alert alert-success" role="alert">Данные успешно загружены</div>
+{% endif %}
+
+{% if state == 'false' %}
+<div class="alert alert-danger" role="alert">{{ error }}</div>
+{% endif %}
+
+
+{% endblock %}
