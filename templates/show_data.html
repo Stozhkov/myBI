@@ -8,20 +8,30 @@
 
 {% if state == 'ok' %}
     <h4>Выберите даты и валюту</h4>
-    <form action="#">
-    Дата начала <input type="date" class="form-control" id="start_date" name="start_date" placeholder="Дата">
-    Дата окончания <input type="date" class="form-control" id="end_date" name="end_date" placeholder="Дата">
-        Валюта
-        <select id="valuta" name="valuta">
-            {% for item in valutes %}
-            <option value="{{ item.id }}">{{ item.name }}</option>
-            {% endfor %}
-        </select>
-        <input type="submit" value="Показать">
+    <div class="col-md-6">
+        <form>
+            <div class="form-group">
+                <label for="start_date">Дата начала</label>
+                <input type="date" class="form-control" id="start_date" name="start_date" placeholder="Дата">
+            </div>
+            <div class="form-group">
+                <label for="end_date">Дата окончания</label>
+                <input type="date" class="form-control" id="end_date" name="end_date" placeholder="Дата">
+            </div>
+            <div class="form-group">
+                <label for="valuta">Валюта</label>
+                <select id="valuta" name="valuta" class="form-control">
+                    {% for item in valutes %}
+                    <option value="{{ item.id }}">{{ item.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        <input type="submit" class="btn btn-primary" value="Показать">
     </form>
 {% if current_valuta %}
     <h3 class="mt-4">{{ current_valuta.name }}</h3>
 {% endif %}
+{% if curs %}
     <table id="curs_table" class="table table-striped tablesorter">
         <thead>
         <tr>
@@ -47,6 +57,7 @@
         }
     );
     </script>
+{% endif %}
 {% endif %}
 
 {% if state == 'false' %}

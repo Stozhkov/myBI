@@ -4,4 +4,5 @@ class Configuration(object):
 
 ### SQLAlchemy ###
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_DATABASE_URI = 'sqlite:////home/dima/PycharmProjects/myBI/curs.db'
+    # SQLALCHEMY_DATABASE_URI = 'sqlite:////home/dima/PycharmProjects/myBI/curs.db'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:////home/dima/mybi/app/curs.db'
