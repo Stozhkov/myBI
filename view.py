@@ -1,10 +1,9 @@
 from app import app, db
-from flask import render_template, jsonify, send_from_directory, request
-from config import Configuration
-from cbr import CBR
+from flask import render_template, request
 import datetime
 from models import Curs, Valuta
-from sqlalchemy.exc import IntegrityError, InvalidRequestError
+from tasks import get_curs
+from functions import check_tasks
 
 
 @app.route('/')
@@ -15,15 +14,17 @@ def index():
 
 @app.route('/load_data', methods=['GET'])
 def load_data():
-    start_date = request.args.get('start_date')
-    end_date = request.args.get('end_date')
+    start_date_str = request.args.get('start_date')
+    end_date_str = request.args.get('end_date')
 
-    if start_date is None or end_date is None:
-        return render_template('load_data.html', state='new', error='')
+    active_tasks = check_tasks()
+
+    if start_date_str is None or end_date_str is None:
+        return render_template('load_data.html', state='new', error='', active_tasks=active_tasks)
     else:
         try:
-            start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d')
-            end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+            start_date = datetime.datetime.strptime(start_date_str, '%Y-%m-%d')
+            end_date = datetime.datetime.strptime(end_date_str, '%Y-%m-%d')
         except ValueError:
             return render_template('load_data.html', state='false', error='Wrong dates')
 
@@ -33,23 +34,19 @@ def load_data():
         if end_date > datetime.datetime.now():
             return render_template('load_data.html', state='false', error='The end date is future! Is wrong.')
 
-        days = [start_date + datetime.timedelta(days=x) for x in range((end_date - start_date).days + 1)]
-        print(days)
-        cbr = CBR()
-        for day in days:
-            curs = cbr.get_curs_on_date(day.strftime('%Y-%m-%d'))
-            for c in curs['curs']:
-                if db.session.query(Valuta).get({'id': c['Vcode']}) is None:
-                    valuta = Valuta(id=int(c['Vcode']), ch_code=c['VchCode'], name=c['Vname'])
-                    db.session.add(valuta)
-                    db.session.commit()
+        # print(type(start_date))
+        get_curs.delay(start_date, end_date)
 
-                if db.session.query(Curs).filter(Curs.code==c['Vcode']).filter(Curs.date==day.strftime('%Y-%m-%d')).first() is None:
-                    curs_record = Curs(code=int(c['Vcode']), date=day, nom=c['Vnom'], curs=c['Vcurs'])
-                    db.session.add(curs_record)
-                    db.session.commit()
+        # task = Task(id=t.task_id, start_date=start_date_str, end_date=end_date_str)
+        # db.session.add(task)
+        # db.session.commit()
 
-        return render_template('load_data.html', state='ok', error='')
+        # print(t.task_id)
+
+
+        print(active_tasks)
+        return render_template('load_data.html', state='ok', error='', active_tasks=active_tasks)
+
 
 @app.route('/show_data', methods=['GET'])
 def show_data():

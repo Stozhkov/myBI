@@ -6,6 +6,14 @@
 
 {% block content %}
 
+{% if active_tasks %}
+<div class="alert alert-warning" role="alert"><b>Внимание! Выполняется фоновая задача.</b><br>
+    {% for task in active_tasks %}
+        Загрузка курсов с {{ task['start_date'] }} по {{ task['end_date'] }}.<br>
+    {% endfor %}
+</div>
+{% endif %}
+
 {% if state == 'new' %}
     <h4>Выберите диапазон дат для загрузки курсов валют из ЦБ РФ</h4>
     <div class="col-md-6">
@@ -24,7 +32,7 @@
 {% endif %}
 
 {% if state == 'ok' %}
-<div class="alert alert-success" role="alert">Данные успешно загружены</div>
+<div class="alert alert-success" role="alert">Запущена задача по загруззке данных. В ближайшее время она завершится.</div>
 {% endif %}
 
 {% if state == 'false' %}

@@ -1,4 +1,5 @@
 from app import db
+import datetime
 
 
 class Curs(db.Model):
