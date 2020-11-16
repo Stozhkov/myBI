@@ -32,6 +32,8 @@
     <h3 class="mt-4">{{ current_valuta.name }}</h3>
 {% endif %}
 {% if curs %}
+        Скачать данные (<a href="get_file/csv/{{ current_valuta.id }}/{{ start_date  }}/{{  end_date }}">csv</a>/
+                        <a href="get_file/xlsx/{{ current_valuta.id }}/{{ start_date  }}/{{  end_date }}">xlsx</a>)
     <table id="curs_table" class="table table-striped tablesorter">
         <thead>
         <tr>

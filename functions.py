@@ -21,3 +21,12 @@ def check_tasks():
     else:
         return False
 
+
+def convert_to_dict(list_object):
+    result = []
+    for row in list_object:
+        result.append(row.__dict__)
+
+    return result
+
+
